@@ -1,0 +1,38 @@
+.header {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    top: 0;
+    width: calc(100% - 60px);
+    box-shadow: var(--tiara-header-box-shadow);
+    background: var(--tiara-component-background-color);
+    z-index: 1450;
+    box-sizing: border-box;
+    height: 70px;
+
+    .center {
+        flex: 1 1 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .right {
+        display: flex;
+        justify-content: right;
+        gap: 30px;
+        align-items: center;
+    }
+
+    .left {
+        display: flex;
+        justify-content: left;
+        gap: 30px;
+        align-items: center;
+    }
+}
+
+.view-title {
+    font-size: 1.8em;
+    font-weight: bold;
+}

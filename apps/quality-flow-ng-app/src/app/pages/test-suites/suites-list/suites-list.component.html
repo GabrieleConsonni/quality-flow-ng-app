@@ -1,0 +1,142 @@
+<div class="suites-list">
+  <header class="suites-list__header">
+    <div class="suites-list__heading">
+      <h1>Test Suites</h1>
+      <p class="suites-list__subtitle">Define, run and schedule sequences of tests</p>
+    </div>
+    <div class="suites-list__actions">
+      <dx-button
+        text="+ New suite"
+        type="default"
+        stylingMode="contained"
+        (onClick)="openCreatePopup()"
+      ></dx-button>
+    </div>
+  </header>
+
+  <div class="suites-list__toolbar">
+    <dx-text-box
+      placeholder="Search by description"
+      [value]="searchTerm()"
+      (onInput)="onSearchInput($any($event.event?.target)?.value)"
+      width="320"
+    ></dx-text-box>
+    <dx-button
+      icon="refresh"
+      stylingMode="text"
+      hint="Reload"
+      [disabled]="loading()"
+      (onClick)="reload()"
+    ></dx-button>
+  </div>
+
+  @if (loading() && suites().length === 0) {
+    <div class="suites-list__state">
+      <dx-load-indicator [visible]="true"></dx-load-indicator>
+      <span>Loading suites…</span>
+    </div>
+  } @else if (!loading() && filteredSuites().length === 0) {
+    <div class="suites-list__state suites-list__state--empty">
+      <h3>No test suites yet.</h3>
+      <p>Create one to start verifying your flows.</p>
+      <dx-button
+        text="+ New suite"
+        type="default"
+        stylingMode="contained"
+        (onClick)="openCreatePopup()"
+      ></dx-button>
+    </div>
+  } @else {
+    <dx-data-grid
+      class="suites-list__grid"
+      [dataSource]="filteredSuites()"
+      keyExpr="id"
+      [showBorders]="true"
+      [showRowLines]="true"
+      [hoverStateEnabled]="true"
+      [columnAutoWidth]="true"
+      (onRowClick)="openSuite($event.data)"
+    >
+      <dxo-paging [pageSize]="20"></dxo-paging>
+      <dxo-pager
+        [visible]="true"
+        [showPageSizeSelector]="true"
+        [allowedPageSizes]="[10, 20, 50]"
+        [showInfo]="true"
+      ></dxo-pager>
+
+      <dxi-column
+        dataField="description"
+        caption="Name"
+        [allowSorting]="true"
+      ></dxi-column>
+
+      <dxi-column
+        caption="Actions"
+        [width]="180"
+        cellTemplate="actionsTemplate"
+        [allowSorting]="false"
+      ></dxi-column>
+
+      <div *dxTemplate="let cell of 'actionsTemplate'" class="suites-list__row-actions">
+        <dx-button
+          icon="runner"
+          stylingMode="text"
+          hint="Run now"
+          (onClick)="runSuite(cell.data, $event.event)"
+        ></dx-button>
+        <dx-button
+          icon="edit"
+          stylingMode="text"
+          hint="Edit"
+          (onClick)="openSuite(cell.data); $event.event?.stopPropagation()"
+        ></dx-button>
+        <dx-button
+          icon="trash"
+          stylingMode="text"
+          hint="Delete"
+          (onClick)="deleteSuite(cell.data, $event.event)"
+        ></dx-button>
+      </div>
+    </dx-data-grid>
+  }
+
+  <dx-popup
+    [visible]="createPopupVisible()"
+    title="New test suite"
+    [showCloseButton]="!creating()"
+    [dragEnabled]="false"
+    [hideOnOutsideClick]="!creating()"
+    [width]="480"
+    [height]="240"
+    (onHiding)="closeCreatePopup()"
+  >
+    <div class="suites-list__create">
+      <label class="suites-list__create-label" for="qf-new-suite-description">
+        Description
+      </label>
+      <dx-text-box
+        [inputAttr]="{ id: 'qf-new-suite-description' }"
+        placeholder="Customer order verification"
+        [value]="newSuiteDescription()"
+        (onInput)="newSuiteDescription.set($any($event.event?.target)?.value ?? '')"
+        [disabled]="creating()"
+      ></dx-text-box>
+      <div class="suites-list__create-actions">
+        <dx-button
+          text="Cancel"
+          stylingMode="text"
+          [disabled]="creating()"
+          (onClick)="closeCreatePopup()"
+        ></dx-button>
+        <dx-button
+          text="Create"
+          type="default"
+          stylingMode="contained"
+          [disabled]="creating() || newSuiteDescription().trim().length === 0"
+          (onClick)="submitCreate()"
+        ></dx-button>
+      </div>
+    </div>
+  </dx-popup>
+</div>

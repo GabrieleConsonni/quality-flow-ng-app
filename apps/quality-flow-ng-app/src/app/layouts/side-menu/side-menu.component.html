@@ -1,0 +1,16 @@
+<nav class="side-menu" [class.collapsed]="collapsed">
+  <div class="logo-container" (click)="toggleCollapse()">
+    <span class="logo-text">TS</span>
+  </div>
+  <ul class="menu-list">
+    @for (item of menuItems; track item.path) {
+      <li class="menu-item" [class.active]="isActive(item.path)" (click)="navigate(item.path)"
+        [title]="item.text">
+        <span class="menu-icon">{{ item.text.charAt(0) }}</span>
+        @if (!collapsed) {
+          <span class="menu-label">{{ item.text }}</span>
+        }
+      </li>
+    }
+  </ul>
+</nav>

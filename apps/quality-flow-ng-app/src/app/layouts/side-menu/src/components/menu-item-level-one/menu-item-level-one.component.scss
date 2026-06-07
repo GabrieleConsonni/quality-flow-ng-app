@@ -1,0 +1,69 @@
+.menu-item__icon-container {
+    padding: 5px;
+    margin: 10px 15px;
+    background: var(--primary-600);
+    border-radius: 8px;
+    color: var(--primary-200);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--neutral-900);
+    }
+
+    &.menu-item--selected {
+        background-color: var(--tiara-primary-color);
+        color: var(--neutral-100);
+
+        & .menu-item__icon-container {
+            background: rgb(255 255 255 / 33%);
+            color: var(--neutral-100);
+        }
+    }
+
+    &.menu-item--activated {
+        background-color: var(--neutral-800);
+    }
+}
+
+.menu-item__icon {
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    height: 20px;
+    align-items: center;
+}
+
+.menu-item__angle-right-icon {
+    margin-left: auto;
+    margin-right: 15px;
+}
+
+.menu-item__level-two {
+    position: fixed;
+    left: 300px;
+    width: 300px;
+    top: 0;
+    padding-top: 85px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.menu-item__level-two--opened {
+    border-left: 1px solid var(--neutral-600);
+}
+
+.menu-item__level-two--closed {
+    display: none;
+}
+
+.menu-item__menu-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-right: 15px;
+}

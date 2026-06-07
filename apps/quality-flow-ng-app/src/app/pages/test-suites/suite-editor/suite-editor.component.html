@@ -1,0 +1,203 @@
+<div class="suite-editor">
+  <nav class="suite-editor__breadcrumb">
+    <a routerLink="/test-suites">Test Suites</a>
+    <span class="suite-editor__breadcrumb-sep">/</span>
+    <span>{{ suite()?.description || suiteId() }}</span>
+  </nav>
+
+  @if (loading() && !suite()) {
+    <div class="suite-editor__state">
+      <dx-load-indicator [visible]="true"></dx-load-indicator>
+      <span>Loading suite…</span>
+    </div>
+  } @else if (suite()) {
+    <header class="suite-editor__header">
+      <div class="suite-editor__heading">
+        <label class="suite-editor__label" for="qf-suite-description">Suite description</label>
+        <dx-text-box
+          [inputAttr]="{ id: 'qf-suite-description' }"
+          [value]="description()"
+          (onInput)="onDescriptionChange($any($event.event?.target)?.value)"
+          placeholder="Suite description"
+        ></dx-text-box>
+      </div>
+      <div class="suite-editor__actions">
+        <dx-button
+          text="Save"
+          type="default"
+          stylingMode="contained"
+          [disabled]="!descriptionDirty() || saving()"
+          (onClick)="saveDescription()"
+        ></dx-button>
+        <dx-button
+          text="Run suite"
+          icon="runner"
+          stylingMode="outlined"
+          (onClick)="runSuite()"
+        ></dx-button>
+        <dx-button
+          icon="trash"
+          stylingMode="text"
+          hint="Delete suite"
+          (onClick)="deleteSuite()"
+        ></dx-button>
+      </div>
+    </header>
+
+    <section class="suite-editor__section">
+      <button
+        type="button"
+        class="suite-editor__expander"
+        (click)="toggleSetup()"
+        [attr.aria-expanded]="setupExpanded()"
+      >
+        <span class="suite-editor__expander-icon">{{ setupExpanded() ? '▾' : '▸' }}</span>
+        <span class="suite-editor__expander-title">Setup</span>
+        <span class="suite-editor__expander-meta">
+          Runs once before all tests · {{ setupItem()?.commands?.length ?? 0 }} step(s)
+        </span>
+      </button>
+      @if (setupExpanded()) {
+        <div class="suite-editor__hook-body">
+          @if (!setupItem() || (setupItem()?.commands?.length ?? 0) === 0) {
+            <p class="suite-editor__placeholder">
+              No setup steps. The Step Editor arrives in a later phase.
+            </p>
+          } @else {
+            <ol class="suite-editor__steps">
+              @for (cmd of setupItem()?.commands ?? []; track cmd.order) {
+                <li>
+                  <span class="suite-editor__step-code">{{ cmd.command_code }}</span>
+                  <span class="suite-editor__step-desc">{{ cmd.description }}</span>
+                </li>
+              }
+            </ol>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="suite-editor__section">
+      <div class="suite-editor__tests-header">
+        <h2>Tests ({{ tests().length }})</h2>
+        <dx-button
+          text="+ Add test"
+          stylingMode="contained"
+          type="default"
+          (onClick)="openNewTestDialog()"
+        ></dx-button>
+      </div>
+
+      @if (tests().length === 0) {
+        <div class="suite-editor__empty">
+          <p>No tests yet. Add your first test.</p>
+          <dx-button
+            text="+ Add test"
+            stylingMode="contained"
+            type="default"
+            (onClick)="openNewTestDialog()"
+          ></dx-button>
+        </div>
+      } @else {
+        <ul class="suite-editor__tests">
+          @for (test of tests(); track test.id) {
+            <li class="suite-editor__test">
+              <div class="suite-editor__test-info">
+                <span class="suite-editor__test-name">{{ test.description || '(unnamed)' }}</span>
+                <span class="suite-editor__test-meta">
+                  {{ test.template_kind }} · {{ test.commands?.length ?? 0 }} step(s)
+                </span>
+              </div>
+              <div class="suite-editor__test-actions">
+                <dx-button
+                  icon="runner"
+                  stylingMode="text"
+                  hint="Run test"
+                  (onClick)="runTest(test, $event.event)"
+                ></dx-button>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="suite-editor__section">
+      <button
+        type="button"
+        class="suite-editor__expander"
+        (click)="toggleTeardown()"
+        [attr.aria-expanded]="teardownExpanded()"
+      >
+        <span class="suite-editor__expander-icon">{{ teardownExpanded() ? '▾' : '▸' }}</span>
+        <span class="suite-editor__expander-title">Teardown</span>
+        <span class="suite-editor__expander-meta">
+          Runs once after all tests · {{ teardownItem()?.commands?.length ?? 0 }} step(s)
+        </span>
+      </button>
+      @if (teardownExpanded()) {
+        <div class="suite-editor__hook-body">
+          @if (!teardownItem() || (teardownItem()?.commands?.length ?? 0) === 0) {
+            <p class="suite-editor__placeholder">
+              No teardown steps. The Step Editor arrives in a later phase.
+            </p>
+          } @else {
+            <ol class="suite-editor__steps">
+              @for (cmd of teardownItem()?.commands ?? []; track cmd.order) {
+                <li>
+                  <span class="suite-editor__step-code">{{ cmd.command_code }}</span>
+                  <span class="suite-editor__step-desc">{{ cmd.description }}</span>
+                </li>
+              }
+            </ol>
+          }
+        </div>
+      }
+    </section>
+  } @else {
+    <p class="suite-editor__placeholder">Suite not found.</p>
+  }
+
+  <qf-new-test-dialog
+    [visible]="newTestDialogVisible()"
+    (applied)="onTemplateSelected($event)"
+    (closed)="closeNewTestDialog()"
+  ></qf-new-test-dialog>
+
+  <dx-popup
+    [visible]="addTestPopupVisible()"
+    title="Add custom test"
+    [showCloseButton]="!addingTest()"
+    [dragEnabled]="false"
+    [hideOnOutsideClick]="!addingTest()"
+    [width]="480"
+    [height]="240"
+    (onHiding)="closeAddTestPopup()"
+  >
+    <div class="suite-editor__add-test">
+      <label class="suite-editor__label" for="qf-new-test-description">Description</label>
+      <dx-text-box
+        [inputAttr]="{ id: 'qf-new-test-description' }"
+        [value]="newTestDescription()"
+        (onInput)="newTestDescription.set($any($event.event?.target)?.value ?? '')"
+        placeholder="What does this test verify?"
+        [disabled]="addingTest()"
+      ></dx-text-box>
+      <div class="suite-editor__add-test-actions">
+        <dx-button
+          text="Cancel"
+          stylingMode="text"
+          [disabled]="addingTest()"
+          (onClick)="closeAddTestPopup()"
+        ></dx-button>
+        <dx-button
+          text="Add"
+          type="default"
+          stylingMode="contained"
+          [disabled]="addingTest() || newTestDescription().trim().length === 0"
+          (onClick)="submitAddTest()"
+        ></dx-button>
+      </div>
+    </div>
+  </dx-popup>
+</div>

@@ -1,0 +1,43 @@
+<section class="timeline">
+  <header class="timeline__header">
+    <h3>Generated steps</h3>
+    <p class="timeline__subtitle">
+      These are the actual commands that will run. Read-only in template mode.
+    </p>
+  </header>
+
+  @if (loading()) {
+    <div class="timeline__state">
+      <dx-load-indicator [visible]="true" [width]="18" [height]="18"></dx-load-indicator>
+      <span>Generating…</span>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="timeline__error">
+      <strong>Preview error:</strong> {{ errorMessage() }}
+    </div>
+  } @else if (!loading() && commands().length === 0) {
+    <p class="timeline__placeholder">
+      @if (note()) {
+        {{ note() }}
+      } @else {
+        Fill the form on the left to preview the generated steps.
+      }
+    </p>
+  } @else {
+    <ol class="timeline__list">
+      @for (cmd of commands(); track trackByOrder($index, cmd)) {
+        <li class="timeline__step">
+          <span class="timeline__step-order">{{ cmd.order + 1 }}</span>
+          <div class="timeline__step-body">
+            <span class="timeline__step-code">{{ commandCode(cmd) }}</span>
+            @if (cmd.description) {
+              <span class="timeline__step-desc">{{ cmd.description }}</span>
+            }
+          </div>
+        </li>
+      }
+    </ol>
+  }
+</section>

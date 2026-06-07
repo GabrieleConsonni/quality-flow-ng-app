@@ -1,0 +1,106 @@
+<div class="home-container">
+  <div class="home-header">
+    <h2>{{ 'HOME.TITLE' | translate }}</h2>
+    <button class="reload-btn" (click)="onReload()" [attr.aria-label]="'HOME.RELOAD' | translate">
+      &#x21bb; {{ 'HOME.RELOAD' | translate }}
+    </button>
+  </div>
+
+  @if (_store.loading()) {
+    <dx-load-indicator [visible]="true" height="60" width="60"></dx-load-indicator>
+  } @else {
+    <div class="home-dashboard">
+      <!-- Status summary cards -->
+      <div class="status-cards">
+        @for (sc of _store.statusCounts(); track sc.status) {
+          <div class="status-card" [style.border-left-color]="getStatusColor(sc.status)"
+               (click)="onStatusClick(sc.status)">
+            <span class="status-card__count">{{ sc.count }}</span>
+            <span class="status-card__label">{{ sc.status | uppercase }}</span>
+          </div>
+        }
+        <div class="status-card status-card--total">
+          <span class="status-card__count">{{ _store.totalExecutions() }}</span>
+          <span class="status-card__label">{{ 'HOME.TOTAL' | translate }}</span>
+        </div>
+      </div>
+
+      <div class="home-content">
+        <!-- Pie chart -->
+        <div class="chart-panel">
+          <dx-pie-chart
+            [dataSource]="_store.statusCounts()"
+            [title]="'HOME.CHART_TITLE' | translate"
+            [customizePoint]="customizePoint"
+            type="doughnut"
+            [innerRadius]="0.6"
+            [palette]="['#4caf50', '#f44336', '#ff9800']">
+            <dxi-series argumentField="status" valueField="count">
+              <dxo-label [visible]="true">
+              </dxo-label>
+            </dxi-series>
+            <dxo-legend [visible]="true" horizontalAlignment="center" verticalAlignment="bottom">
+            </dxo-legend>
+            <dxo-tooltip [enabled]="true"></dxo-tooltip>
+          </dx-pie-chart>
+        </div>
+
+        <!-- Executions DataGrid -->
+        <div class="grid-panel">
+          <dx-data-grid
+            [dataSource]="_store.executions()"
+            [showBorders]="true"
+            [showColumnLines]="true"
+            [showRowLines]="true"
+            [columnAutoWidth]="true"
+            [allowColumnResizing]="true"
+            [columnResizingMode]="'widget'"
+            keyExpr="id">
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-paging [pageSize]="20"></dxo-paging>
+            <dxo-pager
+              [visible]="true"
+              [allowedPageSizes]="[20, 50, 100]"
+              [showPageSizeSelector]="true"
+              [showInfo]="true"
+              [showNavigationButtons]="true">
+            </dxo-pager>
+            <dxo-sorting mode="multiple"></dxo-sorting>
+
+            <dxi-column dataField="test_suite_description"
+                        [caption]="'HOME.GRID.SUITE' | translate"
+                        [width]="220">
+            </dxi-column>
+            <dxi-column dataField="status"
+                        [caption]="'HOME.GRID.STATUS' | translate"
+                        [width]="110"
+                        cellTemplate="statusTemplate">
+            </dxi-column>
+            <div *dxTemplate="let cell of 'statusTemplate'">
+              <span class="status-badge" [style.background-color]="getStatusColor(cell.value)">
+                {{ cell.value | uppercase }}
+              </span>
+            </div>
+            <dxi-column dataField="started_at"
+                        [caption]="'HOME.GRID.STARTED' | translate"
+                        dataType="datetime"
+                        format="yyyy-MM-dd HH:mm:ss"
+                        [width]="180"
+                        sortOrder="desc">
+            </dxi-column>
+            <dxi-column dataField="finished_at"
+                        [caption]="'HOME.GRID.FINISHED' | translate"
+                        dataType="datetime"
+                        format="yyyy-MM-dd HH:mm:ss"
+                        [width]="180">
+            </dxi-column>
+            <dxi-column dataField="error_message"
+                        [caption]="'HOME.GRID.ERROR' | translate"
+                        [visible]="true">
+            </dxi-column>
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  }
+</div>

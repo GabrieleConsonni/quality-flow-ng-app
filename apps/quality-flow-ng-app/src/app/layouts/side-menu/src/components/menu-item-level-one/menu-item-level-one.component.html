@@ -1,0 +1,25 @@
+<div class="menu-item" [ngClass]="{'menu-item--selected': item.isSelected, 'menu-item--activated': item.isOpen}"
+  (click)="selectItem(item)" tabindex="0" role="treeitem"
+  [attr.aria-expanded]="hasChildren ? item.isOpen : null" [attr.aria-selected]="item.isSelected"
+  [attr.aria-label]="item.name" (keydown)="onKeyDown($event)">
+  <div class="menu-item__icon-container">
+    <i [class]="item.icon + ' menu-item__icon'"></i>
+  </div>
+  <span class="menu-item__menu-text" [title]="item.name">
+    {{ item.name }}
+  </span>
+  @if (hasChildren) {
+    <i class="fa-solid fa-angle-right menu-item__angle-right-icon"></i>
+  }
+</div>
+@if ((item.children ?? []).length > 0) {
+  <div
+    [ngClass]="{'menu-item__level-two--closed': !item.isOpen, 'menu-item__level-two--opened': item.isOpen}"
+    class="menu-item__level-two" role="group">
+    <dx-scroll-view>
+      @for (child of item.children; track child) {
+        <qf-menu-item-level-two [item]="child"></qf-menu-item-level-two>
+      }
+    </dx-scroll-view>
+  </div>
+}

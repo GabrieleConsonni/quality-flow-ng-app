@@ -1,0 +1,14 @@
+@if (isLevTwoOpened$ | async) {
+  <div class="level-two" @fadeIn>
+    <div class="level-two__menu-item">
+      <span class="level-two__menu-item__menu-text" [title]="item.name">{{ item.name }}</span>
+    </div>
+    @if (item.children && item.children.length > 0) {
+      <div>
+        @for (child of item.children; track child) {
+          <qf-menu-item-level-three [item]="child"></qf-menu-item-level-three>
+        }
+      </div>
+    }
+  </div>
+}

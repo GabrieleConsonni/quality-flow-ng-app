@@ -1,0 +1,97 @@
+.new-test-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+
+  &__subtitle {
+    margin: 0;
+    color: var(--tiara-text-muted-color, #6b7280);
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid var(--tiara-border-color, #d1d5db);
+    border-radius: 8px;
+    background: var(--tiara-surface-color, #fff);
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+
+    &:hover {
+      border-color: var(--tiara-primary-color, #3b82f6);
+    }
+
+    &--selected {
+      border-color: var(--tiara-primary-color, #3b82f6);
+      background: var(--tiara-primary-color-soft, #eff6ff);
+    }
+  }
+
+  &__card-header h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  &__card-description {
+    margin: 0;
+    color: var(--tiara-text-muted-color, #6b7280);
+    font-size: 0.85rem;
+  }
+
+  &__card-bullets {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--tiara-text-muted-color, #6b7280);
+    font-size: 0.85rem;
+  }
+
+  &__card-footer {
+    margin-top: auto;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--tiara-surface-hover-color, #f3f4f6);
+    color: var(--tiara-text-muted-color, #6b7280);
+    font-size: 0.7rem;
+    align-self: flex-start;
+
+    &--warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__docs-link {
+    color: var(--tiara-primary-color, #3b82f6);
+    font-size: 0.85rem;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__actions-buttons {
+    display: flex;
+    gap: 8px;
+  }
+}

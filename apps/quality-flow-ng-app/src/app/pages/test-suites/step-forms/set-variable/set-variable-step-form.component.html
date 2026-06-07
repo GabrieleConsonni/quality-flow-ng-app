@@ -1,0 +1,96 @@
+<div class="step-form">
+
+  <div class="step-form__field">
+    <label class="step-form__label" for="sv-name">
+      Name <span class="step-form__required" aria-hidden="true">*</span>
+    </label>
+    <dx-text-box
+      id="sv-name"
+      [value]="nameValue()"
+      placeholder="variable name"
+      (onValueChanged)="onNameChanged($event.value)"
+    />
+  </div>
+
+  <div class="step-form__field">
+    <label class="step-form__label" for="sv-context">Context</label>
+    <dx-select-box
+      id="sv-context"
+      [value]="contextValue()"
+      [items]="contextItems"
+      displayExpr="label"
+      valueExpr="value"
+      (onValueChanged)="onContextChanged($event.value)"
+    />
+  </div>
+
+  <div class="step-form__field">
+    <label class="step-form__label" for="sv-value-type">Value type</label>
+    <dx-select-box
+      id="sv-value-type"
+      [value]="valueTypeValue()"
+      [items]="valueTypeItems"
+      displayExpr="label"
+      valueExpr="value"
+      (onValueChanged)="onValueTypeChanged($event.value)"
+    />
+  </div>
+
+  @if (valueTypeValue() === 'value') {
+    <div class="step-form__field">
+      <label class="step-form__label" for="sv-plain-value">Value</label>
+      <dx-text-box
+        id="sv-plain-value"
+        [value]="plainValue()"
+        placeholder="string or number"
+        (onValueChanged)="onPlainValueChanged($event.value)"
+      />
+    </div>
+  }
+
+  @if (valueTypeValue() === 'json') {
+    <div class="step-form__field">
+      <label class="step-form__label" for="sv-json-value">Value (JSON)</label>
+      <dx-text-area
+        id="sv-json-value"
+        class="step-form__monospace"
+        [value]="jsonValue()"
+        [height]="160"
+        placeholder='{ "key": "value" }'
+        [inputAttr]="{ spellcheck: false, autocorrect: 'off', autocapitalize: 'off' }"
+        (onValueChanged)="onJsonValueChanged($event.value)"
+      />
+      @if (jsonParseError()) {
+        <div class="step-form__error" role="alert">
+          Invalid JSON: {{ jsonParseError() }}
+        </div>
+      }
+    </div>
+  }
+
+  @if (valueTypeValue() === 'function') {
+    <div class="step-form__field">
+      <label class="step-form__label" for="sv-function">Function</label>
+      <dx-select-box
+        id="sv-function"
+        [value]="functionNameValue()"
+        [items]="functionItems"
+        (onValueChanged)="onFunctionNameChanged($event.value)"
+      />
+    </div>
+  }
+
+  <div class="step-form__field">
+    <label class="step-form__label" for="sv-def-id">Definition ID</label>
+    <dx-text-box
+      id="sv-def-id"
+      [value]="definitionIdValue()"
+      placeholder="auto-fills from name when empty"
+      (onValueChanged)="onDefinitionIdChanged($event.value)"
+    />
+    <div class="step-form__hint">
+      Leave empty to use the variable name as the definition ID.
+    </div>
+  </div>
+
+</div>

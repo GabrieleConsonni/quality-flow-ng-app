@@ -1,0 +1,33 @@
+<div class="navigation-panel" [class.navigation-panel--expanded-one-level]="isLevOneOpened$ | async" tabindex="0"
+  role="menu" aria-haspopup="true" [attr.aria-expanded]="isLevOneOpened$ | async" (mouseenter)="openMenu()"
+  (mouseleave)="closeMenu()" (focus)="openMenu()" (blur)="closeMenu()"
+  [class.navigation-panel--expanded-two-level]="isLevTwoOpened$ | async">
+  <div class="navigation-panel__logo-container">
+    <img [src]="logo" alt="Logo" height="35" class="navigation-panel__logo" />
+  </div>
+  @if (isMenuOpened$ | async) {
+    <div class="navigation-panel__search-text-box">
+      <dx-text-box [value]="(searchValue$ | async) ?? ''" [disabled]="false" [readOnly]="false"
+      (onValueChanged)="searchValueChanged($event)" mode="search" valueChangeEvent="input"></dx-text-box>
+    </div>
+  } @else {
+    <div class="navigation-panel__search-icon-container">
+      <i class="fa-solid fa-magnifying-glass navigation-panel__search-icon"></i>
+    </div>
+  }
+  <dx-scroll-view class="navigation-panel__scroll-view" role="tree">
+    @if ((searchData$ | async) === undefined || (searchValue$ | async) === '' ) {
+      @for (item of menuItems$ | async; track item.id) {
+        <div class="navigation-panel__menu-item-level-one">
+          @if (item) {
+            <qf-menu-item-level-one [item]="item"></qf-menu-item-level-one>
+          }
+        </div>
+      }
+    } @else {
+      <div class="navigation-panel__search-result">
+        <qf-search-result></qf-search-result>
+      </div>
+    }
+  </dx-scroll-view>
+</div>

@@ -1,0 +1,5 @@
+<div class="menu-item" [class.menu-item--selected]="item.isSelected" tabindex="0" role="treeitem"
+    [attr.aria-selected]="item.isSelected" [attr.aria-label]="item.name" (click)="selectItem(item)"
+    (keydown)="onKeyDown($event)">
+    <span class="menu-item__menu-text" [title]="item.name">{{ item.name }}</span>
+</div>

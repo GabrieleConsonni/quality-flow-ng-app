@@ -1,0 +1,159 @@
+<!-- ── Main dialog ──────────────────────────────────────────────────────────── -->
+<dx-popup
+  [visible]="visibleSig()"
+  [title]="dialogTitle()"
+  [showCloseButton]="true"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="false"
+  [width]="640"
+  [height]="'auto'"
+  [maxHeight]="'90vh'"
+  (onHiding)="onHiding()"
+>
+  <div class="step-editor-dialog">
+
+    <!-- ── Phase 1: Kind chooser ─────────────────────────────────────────── -->
+    @if (phaseSig() === 'chooser') {
+      <p class="step-editor-dialog__subtitle">
+        Choose what this step does.
+      </p>
+
+      <dx-text-box
+        class="step-editor-dialog__search"
+        placeholder="Search step kinds..."
+        [showClearButton]="true"
+        [value]="searchQuerySig()"
+        (onValueChanged)="onSearchChanged($event.value)"
+      ></dx-text-box>
+
+      <div class="step-editor-dialog__list" role="listbox" aria-label="Step kinds">
+        @for (group of filteredGroups(); track group.category) {
+          <div class="step-editor-dialog__group">
+            <header class="step-editor-dialog__group-header">
+              <span class="step-editor-dialog__group-name">{{ group.category | uppercase }}</span>
+              <span class="step-editor-dialog__group-subtitle">{{ group.subtitle }}</span>
+            </header>
+
+            @for (item of group.items; track item.code) {
+              <button
+                type="button"
+                class="step-editor-dialog__tile"
+                [class.step-editor-dialog__tile--selected]="isSelected(item.code)"
+                role="option"
+                [attr.aria-selected]="isSelected(item.code)"
+                (click)="selectKind(item.code)"
+                (dblclick)="onKindDoubleClick(item.code)"
+              >
+                <span class="step-editor-dialog__tile-code">{{ item.code }}</span>
+                <span class="step-editor-dialog__tile-desc">{{ item.description }}</span>
+              </button>
+            }
+          </div>
+        }
+
+        @if (filteredGroups().length === 0) {
+          <div class="step-editor-dialog__empty">
+            No step kinds match your search.
+          </div>
+        }
+      </div>
+
+      <footer class="step-editor-dialog__actions">
+        <a
+          class="step-editor-dialog__docs-link"
+          href="https://docs.example.com/quality-flow/commands"
+          target="_blank"
+          rel="noopener"
+        >
+          Step reference docs →
+        </a>
+        <div class="step-editor-dialog__actions-buttons">
+          <dx-button text="Cancel" stylingMode="text" (onClick)="cancel()"></dx-button>
+          <dx-button
+            text="Continue"
+            type="default"
+            stylingMode="contained"
+            [disabled]="continueDisabled()"
+            (onClick)="continueToForm()"
+          ></dx-button>
+        </div>
+      </footer>
+    }
+
+    <!-- ── Phase 2: Kind-specific form ───────────────────────────────────── -->
+    @if (phaseSig() === 'form') {
+      <div class="step-editor-dialog__form-phase">
+
+        <!-- Kind badge (locked in edit mode) -->
+        <div class="step-editor-dialog__kind-badge">
+          <span class="step-editor-dialog__kind-badge-label">Kind</span>
+          <span class="step-editor-dialog__kind-badge-code">{{ selectedKindSig() }}</span>
+        </div>
+
+        <!-- Common description field (above the kind-specific form) -->
+        <div class="step-editor-dialog__field">
+          <label class="step-editor-dialog__field-label" for="stepDescription">
+            Description
+            <span class="step-editor-dialog__field-hint">(optional)</span>
+          </label>
+          <dx-text-box
+            inputId="stepDescription"
+            placeholder="Short note about what this step does…"
+            [value]="descriptionSig()"
+            (onValueChanged)="onDescriptionChanged($event.value)"
+          ></dx-text-box>
+        </div>
+
+        <!-- Kind-specific form rendered via ViewContainerRef -->
+        <div class="step-editor-dialog__form-host">
+          <ng-container #formOutlet></ng-container>
+        </div>
+
+        <footer class="step-editor-dialog__actions">
+          <div class="step-editor-dialog__actions-buttons">
+            <dx-button text="Cancel" stylingMode="text" (onClick)="cancel()"></dx-button>
+            <dx-button
+              [text]="modeSig() === 'edit' ? 'Save' : 'Add step'"
+              type="default"
+              stylingMode="contained"
+              [disabled]="saveDisabled()"
+              (onClick)="save()"
+            ></dx-button>
+          </div>
+        </footer>
+      </div>
+    }
+
+  </div>
+</dx-popup>
+
+<!-- ── Discard confirm popup ────────────────────────────────────────────────── -->
+<dx-popup
+  [visible]="showDiscardConfirmSig()"
+  title="Discard changes?"
+  [showCloseButton]="false"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="false"
+  [width]="360"
+  [height]="'auto'"
+  (onHiding)="onDiscardHiding()"
+>
+  <div class="step-editor-dialog__confirm">
+    <p class="step-editor-dialog__confirm-text">
+      You have unsaved changes. Are you sure you want to discard them?
+    </p>
+    <div class="step-editor-dialog__confirm-actions">
+      <dx-button
+        text="Keep editing"
+        stylingMode="outlined"
+        (onClick)="cancelDiscard()"
+      ></dx-button>
+      <dx-button
+        text="Discard"
+        type="danger"
+        stylingMode="contained"
+        (onClick)="confirmDiscard()"
+      ></dx-button>
+    </div>
+  </div>
+</dx-popup>

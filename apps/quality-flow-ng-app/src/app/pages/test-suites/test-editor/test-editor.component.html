@@ -1,0 +1,169 @@
+<div class="test-editor">
+  <nav class="test-editor__breadcrumb">
+    <a routerLink="/test-suites">Test Suites</a>
+    <span class="test-editor__breadcrumb-sep">/</span>
+    <a [routerLink]="['/test-suites', suiteId()]">Suite</a>
+    <span class="test-editor__breadcrumb-sep">/</span>
+    <span>{{ routeItemId() ? 'Edit test' : 'New test' }}</span>
+  </nav>
+
+  @if (loading()) {
+    <div class="test-editor__state">
+      <dx-load-indicator [visible]="true"></dx-load-indicator>
+      <span>Loading test…</span>
+    </div>
+  } @else {
+    <header class="test-editor__header">
+      <div class="test-editor__heading">
+        <label class="test-editor__label" for="qf-test-description">Test description</label>
+        <dx-text-box
+          [inputAttr]="{ id: 'qf-test-description' }"
+          [value]="testDescription()"
+          (onInput)="testDescription.set($any($event.event?.target)?.value ?? '')"
+          placeholder="What does this test verify?"
+        ></dx-text-box>
+        <span class="test-editor__chip">{{ templateKind() }}</span>
+      </div>
+      <div class="test-editor__actions">
+        <dx-button
+          text="Cancel"
+          stylingMode="text"
+          [disabled]="saving()"
+          (onClick)="cancel()"
+        ></dx-button>
+        <dx-button
+          text="Save"
+          type="default"
+          stylingMode="contained"
+          [disabled]="saving() || !isFormValid()"
+          (onClick)="save()"
+        ></dx-button>
+      </div>
+    </header>
+
+    <div class="test-editor__body">
+      <section class="test-editor__form">
+        @if (templateKind() === 'send_verify') {
+          <fieldset class="test-editor__group">
+            <legend>Send</legend>
+            <label class="test-editor__label" for="qf-queue-id">Queue id</label>
+            <dx-text-box
+              [inputAttr]="{ id: 'qf-queue-id' }"
+              [value]="queueId()"
+              (onInput)="queueId.set($any($event.event?.target)?.value ?? '')"
+              placeholder="customer-events"
+            ></dx-text-box>
+
+            <label class="test-editor__label" for="qf-payload">Payload (JSON inline)</label>
+            <dx-text-area
+              [inputAttr]="{ id: 'qf-payload' }"
+              [value]="payloadText()"
+              (onInput)="updatePayloadText($any($event.event?.target)?.value ?? '')"
+              [height]="180"
+              spellCheck="false"
+              class="test-editor__payload"
+            ></dx-text-area>
+            @if (payloadError()) {
+              <p class="test-editor__error">JSON parse: {{ payloadError() }}</p>
+            }
+
+            <label class="test-editor__label" for="qf-wait-ms">Wait after send (ms)</label>
+            <dx-number-box
+              [inputAttr]="{ id: 'qf-wait-ms' }"
+              [value]="waitMs()"
+              [min]="0"
+              [step]="100"
+              (onValueChanged)="waitMs.set($any($event).value ?? 0)"
+            ></dx-number-box>
+          </fieldset>
+        } @else {
+          <fieldset class="test-editor__group">
+            <legend>Wait</legend>
+            <label class="test-editor__label" for="qf-wait-ms-mock">Wait for trigger (ms)</label>
+            <dx-number-box
+              [inputAttr]="{ id: 'qf-wait-ms-mock' }"
+              [value]="waitMs()"
+              [min]="0"
+              [step]="100"
+              (onValueChanged)="waitMs.set($any($event).value ?? 0)"
+            ></dx-number-box>
+          </fieldset>
+        }
+
+        <fieldset class="test-editor__group">
+          <legend>Verify ({{ asserts().length }} assert{{ asserts().length === 1 ? '' : 's' }})</legend>
+          @for (assert of asserts(); track $index; let i = $index) {
+            <div class="test-editor__assert">
+              <dx-select-box
+                [items]="assertTargets"
+                [value]="assert.target"
+                (onValueChanged)="updateAssert(i, { target: $any($event).value })"
+                width="120"
+              ></dx-select-box>
+
+              @if (assert.target === 'queue') {
+                <dx-text-box
+                  placeholder="Queue id"
+                  [value]="assert.queue_id ?? ''"
+                  (onInput)="updateAssert(i, { queue_id: $any($event.event?.target)?.value ?? '' })"
+                  width="180"
+                ></dx-text-box>
+              }
+              @if (assert.target === 'database') {
+                <dx-text-box
+                  placeholder="Connection id"
+                  [value]="assert.connection_id ?? ''"
+                  (onInput)="updateAssert(i, { connection_id: $any($event.event?.target)?.value ?? '' })"
+                  width="160"
+                ></dx-text-box>
+                <dx-text-box
+                  placeholder="SELECT ..."
+                  [value]="assert.database_query ?? ''"
+                  (onInput)="updateAssert(i, { database_query: $any($event.event?.target)?.value ?? '' })"
+                  width="220"
+                ></dx-text-box>
+              }
+
+              <dx-select-box
+                [items]="assertOperators"
+                [value]="assert.operator ?? 'exists'"
+                (onValueChanged)="updateAssert(i, { operator: $any($event).value })"
+                width="110"
+              ></dx-select-box>
+
+              @if (assert.operator === 'equals') {
+                <dx-text-box
+                  placeholder='[{"r":1}]'
+                  [value]="assert.expected ? $any(assert.expected | json) : ''"
+                  (onInput)="updateAssert(i, { expected: tryParseJson($any($event.event?.target)?.value ?? '') })"
+                  width="220"
+                ></dx-text-box>
+              }
+
+              <dx-button
+                icon="trash"
+                stylingMode="text"
+                hint="Remove assertion"
+                (onClick)="removeAssert(i)"
+              ></dx-button>
+            </div>
+          } @empty {
+            <p class="test-editor__placeholder">No assertions yet.</p>
+          }
+          <dx-button
+            text="+ Add assertion"
+            stylingMode="text"
+            (onClick)="addAssert()"
+          ></dx-button>
+        </fieldset>
+      </section>
+
+      <aside class="test-editor__sidebar">
+        <qf-generated-steps-timeline
+          [templateKind]="templateKind()"
+          [templateConfig]="currentTemplateConfig()"
+        ></qf-generated-steps-timeline>
+      </aside>
+    </div>
+  }
+</div>

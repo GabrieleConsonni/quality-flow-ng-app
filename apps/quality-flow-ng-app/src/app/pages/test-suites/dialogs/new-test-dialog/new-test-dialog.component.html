@@ -1,0 +1,65 @@
+<dx-popup
+  [visible]="visibleSig()"
+  title="New test"
+  [showCloseButton]="true"
+  [dragEnabled]="false"
+  [hideOnOutsideClick]="true"
+  [width]="720"
+  [height]="520"
+  (onHiding)="onHiding()"
+>
+  <div class="new-test-dialog">
+    <p class="new-test-dialog__subtitle">
+      Choose a template to start. You can convert to a custom test later.
+    </p>
+
+    <div class="new-test-dialog__cards">
+      @for (card of cards; track card.kind) {
+        <button
+          type="button"
+          class="new-test-dialog__card"
+          [class.new-test-dialog__card--selected]="isSelected(card.kind)"
+          (click)="selectKind(card.kind)"
+          (dblclick)="onCardDoubleClick(card.kind)"
+        >
+          <header class="new-test-dialog__card-header">
+            <h3>{{ card.title }}</h3>
+          </header>
+          <p class="new-test-dialog__card-description">{{ card.description }}</p>
+          <ul class="new-test-dialog__card-bullets">
+            @for (bullet of card.bullets; track bullet) {
+              <li>{{ bullet }}</li>
+            }
+          </ul>
+          <footer
+            class="new-test-dialog__card-footer"
+            [class.new-test-dialog__card-footer--warning]="card.footerStyle === 'warning'"
+          >
+            {{ card.footerLabel }}
+          </footer>
+        </button>
+      }
+    </div>
+
+    <footer class="new-test-dialog__actions">
+      <a
+        class="new-test-dialog__docs-link"
+        href="https://docs.example.com/quality-flow/templates"
+        target="_blank"
+        rel="noopener"
+      >
+        Learn about templates →
+      </a>
+      <div class="new-test-dialog__actions-buttons">
+        <dx-button text="Cancel" stylingMode="text" (onClick)="cancel()"></dx-button>
+        <dx-button
+          text="Continue"
+          type="default"
+          stylingMode="contained"
+          [disabled]="selectedKind() === null"
+          (onClick)="confirm()"
+        ></dx-button>
+      </div>
+    </footer>
+  </div>
+</dx-popup>

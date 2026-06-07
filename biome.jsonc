@@ -1,0 +1,49 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.10/schema.json",
+  "files": {
+    "includes": [
+      "apps/quality-flow-ng-app/src/app/**/*.ts",
+      "!apps/quality-flow-ng-app/src/app/**/*.spec.ts"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "lineWidth": 120,
+    "lineEnding": "crlf",
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "javascript": {
+    "formatter": {
+      "trailingCommas": "all",
+      "quoteStyle": "single"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "correctness": {
+        "noUnusedImports": "error"
+      },
+      "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "devextreme-angular": "Usa gli import da devextreme-angular/${module}."
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<dx-load-panel shadingColor="rgba(0,0,0,0.4)" message="" [showPane]="showPane" [showIndicator]="showIndicator"
+  [shading]="true" [hideOnOutsideClick]="false" [visible]="loading()">
+</dx-load-panel>
+
+@if (toastMessage(); as msg) {
+  @if (notificationComponentType() === notificationComponentTypeEnum.TOAST_NOTIFICATION) {
+    <dx-toast [message]="msg.message" [type]="msg.status" [visible]="!!toastMessage()"
+      (onHidden)="resetComponentMessage()">
+    </dx-toast>
+  }
+}

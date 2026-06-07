@@ -1,0 +1,23 @@
+.level-two {
+    margin-top: 25px;
+}
+
+.level-two__menu-item {
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    color: var(--neutral-100);
+    padding: 15px 25px 15px 25px;
+
+    &.menu-item--selected {
+        color: var(--tiara-primary-color);
+    }
+}
+
+.level-two__menu-item__menu-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

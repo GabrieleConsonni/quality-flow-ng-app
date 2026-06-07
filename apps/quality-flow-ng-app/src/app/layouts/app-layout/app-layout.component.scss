@@ -1,0 +1,22 @@
+:host {
+  height: 100%;
+  width: 100%;
+}
+
+.layout {
+  height: 100%;
+  margin-left: 60px;
+}
+
+.main-container {
+  padding-top: 70px;
+  height: calc(100% - 70px);
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  overflow: hidden;
+  padding: var(--page-content-padding-top) var(--page-content-padding-x) var(--page-content-padding-x) var(--page-content-padding-x);
+}

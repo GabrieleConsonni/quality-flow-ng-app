@@ -1,0 +1,64 @@
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/dist
+dist/
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Angular / Nx cache
+/.angular/cache
+.nx/cache
+.nx/workspace-data
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Testing / coverage
+/coverage
+testem.log
+playwright-report/
+test-results/
+
+# E2E secrets
+e2e/auth/storageState.json
+e2e/.env
+
+# DevExtreme license (do not commit license keys)
+**/license-devextreme.ts
+
+# Miscellaneous
+.sass-cache/
+/connect.lock
+/libpeerconnection.log
+/typings
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# System files
+.DS_Store
+Thumbs.db

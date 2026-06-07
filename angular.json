@@ -1,0 +1,227 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "apps",
+  "cli": {
+    "packageManager": "pnpm",
+    "cache": {
+      "enabled": false
+    },
+    "analytics": false
+  },
+  "projects": {
+    "quality-flow-ng-app": {
+      "projectType": "application",
+      "root": "apps/quality-flow-ng-app",
+      "sourceRoot": "apps/quality-flow-ng-app/src",
+      "prefix": "tsm",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss",
+          "skipTests": true,
+          "standalone": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true,
+          "standalone": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true,
+          "standalone": true
+        },
+        "@schematics/angular:resolver": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/apps/quality-flow-ng-app",
+            "index": "apps/quality-flow-ng-app/src/index.html",
+            "tsConfig": "apps/quality-flow-ng-app/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/quality-flow-ng-app/src/favicon.ico",
+              "apps/quality-flow-ng-app/src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/@akeron-ng/tiara-ng/src/styles",
+                "output": "assets/tiara-ng/styles"
+              }
+            ],
+            "styles": [],
+            "scripts": [],
+            "browser": "apps/quality-flow-ng-app/src/main.ts"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "4mb",
+                  "maximumError": "7mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "5kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
+            "development-alkyra": {
+              "assets": [
+                "apps/quality-flow-ng-app/src/favicon.ico",
+                "apps/quality-flow-ng-app/src/assets",
+                {
+                  "glob": "**/*",
+                  "input": "node_modules/@akeron-ng/tiara-ng/src/styles",
+                  "output": "assets/tiara-ng/styles"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "apps/quality-flow-ng-app/src/assets/alkyra",
+                  "output": "assets"
+                }
+              ],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
+            "mock-auth": {
+              "assets": [
+                "apps/quality-flow-ng-app/src/favicon.ico",
+                "apps/quality-flow-ng-app/src/assets",
+                {
+                  "glob": "**/*",
+                  "input": "node_modules/@akeron-ng/tiara-ng/src/styles",
+                  "output": "assets/tiara-ng/styles"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "apps/quality-flow-ng-app/src/assets/vulki",
+                  "output": "assets"
+                }
+              ],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "apps/quality-flow-ng-app/src/environments/environment.ts",
+                  "with": "apps/quality-flow-ng-app/src/environments/environment.mock.ts"
+                }
+              ]
+            },
+            "development-vulki": {
+              "assets": [
+                "apps/quality-flow-ng-app/src/favicon.ico",
+                "apps/quality-flow-ng-app/src/assets",
+                {
+                  "glob": "**/*",
+                  "input": "node_modules/@akeron-ng/tiara-ng/src/styles",
+                  "output": "assets/tiara-ng/styles"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "apps/quality-flow-ng-app/src/assets/vulki",
+                  "output": "assets"
+                }
+              ],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
+            "mock-auth-vulki": {
+              "assets": [
+                "apps/quality-flow-ng-app/src/favicon.ico",
+                "apps/quality-flow-ng-app/src/assets",
+                {
+                  "glob": "**/*",
+                  "input": "node_modules/@akeron-ng/tiara-ng/src/styles",
+                  "output": "assets/tiara-ng/styles"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "apps/quality-flow-ng-app/src/assets/vulki",
+                  "output": "assets"
+                }
+              ],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "apps/quality-flow-ng-app/src/environments/environment.ts",
+                  "with": "apps/quality-flow-ng-app/src/environments/environment.mock.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "quality-flow-ng-app:build:production"
+            },
+            "development": {
+              "proxyConfig": "apps/quality-flow-ng-app/proxy.config.js",
+              "buildTarget": "quality-flow-ng-app:build:development"
+            },
+            "development-alkyra": {
+              "proxyConfig": "apps/quality-flow-ng-app/proxy.config.js",
+              "buildTarget": "quality-flow-ng-app:build:development-alkyra"
+            },
+            "development-vulki": {
+              "proxyConfig": "apps/quality-flow-ng-app/proxy.config.js",
+              "buildTarget": "quality-flow-ng-app:build:development-vulki"
+            },
+            "mock-auth": {
+              "proxyConfig": "apps/quality-flow-ng-app/proxy.config.js",
+              "buildTarget": "quality-flow-ng-app:build:mock-auth"
+            },
+            "mock-auth-vulki": {
+              "proxyConfig": "apps/quality-flow-ng-app/proxy.config.js",
+              "buildTarget": "quality-flow-ng-app:build:mock-auth-vulki"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "quality-flow-ng-app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "buildTarget": "quality-flow-ng-app:build:development",
+            "tsConfig": "apps/quality-flow-ng-app/tsconfig.spec.json",
+            "runner": "vitest"
+          }
+        }
+      }
+    }
+  }
+}

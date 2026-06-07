@@ -1,0 +1,33 @@
+@use '../step-form-shared' as shared;
+
+:host {
+  @include shared.host;
+}
+
+.step-form {
+  @include shared.form-layout;
+
+  &__field {
+    @include shared.field;
+  }
+
+  &__label {
+    @include shared.label;
+  }
+
+  &__required {
+    @include shared.required-mark;
+  }
+
+  &__hint {
+    @include shared.hint;
+  }
+
+  &__error {
+    @include shared.error;
+  }
+
+  &__monospace {
+    @include shared.monospace-textarea;
+  }
+}

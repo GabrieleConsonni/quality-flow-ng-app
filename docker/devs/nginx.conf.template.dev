@@ -1,0 +1,74 @@
+# =================================
+# Template NGINX for Quality Flow (DEV)
+# =================================
+
+# Extract product from URI
+map $request_uri $product_from_uri {
+    ~^/alkyra/([^/?]+) $1;
+    default "alkyra";
+}
+
+# Set cookie value: use existing cookie or URI-derived value
+map $cookie_product $product {
+    ""      $product_from_uri;
+    default $cookie_product;
+}
+
+server {
+  listen 80;
+  server_name _;
+
+  client_max_body_size 100M;
+
+  # Root Angular app
+  location / {
+    add_header Set-Cookie "product=$product; Path=/; HttpOnly";
+    add_header X-Debug $product;
+    add_header "Access-Control-Allow-Origin" "*";
+    add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" always;
+    root /usr/share/nginx/html/quality-flow-ng-app;
+    index index.html index.htm;
+    try_files $uri $uri/ /index.html =404;
+  }
+
+  # Serve assets dynamically based on product
+  location ~ ^/assets/(styles|logos)/(.*)$ {
+    alias /usr/share/nginx/html/quality-flow-ng-app/assets/$product/$1/$2;
+    expires -1;
+    add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" always;
+  }
+
+  # Disable caching in dev to avoid stale bundles
+  location ~* \.(?:js|css|map)$ {
+    root /usr/share/nginx/html/quality-flow-ng-app;
+    expires -1;
+    add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" always;
+  }
+
+  # Proxy API requests to quality-flow
+  location /api/ {
+    proxy_pass http://${QUALITY_FLOW_API_HOST}:${QUALITY_FLOW_API_PORT};
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Origin "";
+
+    # Remove "/api" from path
+    rewrite ^/api/(.*)$ /$1 break;
+  }
+
+  # Proxy public requests (idp-config) to quality-flow
+  location /public/ {
+    proxy_pass http://${QUALITY_FLOW_API_HOST}:${QUALITY_FLOW_API_PORT};
+    proxy_http_version 1.1;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Origin "";
+  }
+}

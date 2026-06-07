@@ -1,0 +1,7 @@
+<qf-navigation-panel-ui></qf-navigation-panel-ui>
+
+@if (!(menuItems$ | async)) {
+  <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [visible]="true"
+    [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false">
+  </dx-load-panel>
+}

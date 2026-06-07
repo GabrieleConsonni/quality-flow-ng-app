@@ -1,0 +1,27 @@
+[data-theme="fluent.blue.light"] akn-navigation-panel-ui .navigation-panel__search-icon-container {
+  background: color-mix(in srgb, var(--tiara-primary-color), transparent 70%);
+  color: var(--tiara-primary-color);
+}
+
+[data-theme="fluent.blue.dark"] {
+  /* dark theme placeholder */
+}
+
+:root {
+  --primary-100: #f1f8ff;
+  --primary-200: #e8f4fe;
+  --primary-300: #d2e9fe;
+  --primary-400: #4ba9fb;
+  --primary-500: #1e93fa;
+  --primary-600: #1282d6;
+  --primary-700: #0f6db3;
+  --primary-800: #0c5a92;
+  --primary-900: #09456e;
+  --primary-1000: #063654;
+  --secondary-color: #dc0083;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+}

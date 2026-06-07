@@ -1,0 +1,19 @@
+<div class="raw-json-step-form">
+  <div class="raw-json-step-form__label">
+    Advanced: edit raw <code>configuration_json</code>
+  </div>
+
+  <dx-text-area
+    class="raw-json-step-form__editor"
+    [value]="textValue()"
+    [inputAttr]="{ spellcheck: false, autocorrect: 'off', autocapitalize: 'off' }"
+    [height]="260"
+    (onValueChanged)="onTextChanged($event.value)"
+  />
+
+  @if (parseError()) {
+    <div class="raw-json-step-form__error" role="alert">
+      Invalid JSON: {{ parseError() }}
+    </div>
+  }
+</div>
