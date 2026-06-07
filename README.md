@@ -23,7 +23,7 @@ The UI is organized around the **Test Suites** domain and the supporting configu
 
 - **Angular 20** (standalone components, signals) in an Nx-style `apps/` workspace
 - **pnpm** package manager
-- **Tiara design system** (`@akeron-ng/tiara-ng`, `tiara-ng-suite`) + **DevExtreme** for data-heavy UI
+- **Custom design tokens** (CSS custom properties, resolved from the Tiara design system palette) + **DevExtreme** for data-heavy UI
 - **NgRx Signals** for state, **RxJS** for async flows
 - **Monaco editor** + **jsondiffpatch** for JSON editing and diffing
 - **OIDC** auth via `angular-oauth2-oidc` (bypassed in the `mock-auth` profile for local dev)

@@ -1,4 +1,3 @@
-import { provideTiaraDesignSystem } from '@akeron-ng/tiara-ng';
 import { ErrorHandlingInterceptor } from '@quality-flow/error-handling-interceptor/error-handling.interceptor';
 import { AppInfoService } from '@quality-flow/infrastructure-services/app-info.service';
 import { AuthService } from '@quality-flow/infrastructure-services/auth.service';
@@ -36,7 +35,6 @@ themes.initialized(() => {
             },
           },
           provideAnimations(),
-          provideTiaraDesignSystem(),
           provideZonelessChangeDetection(),
           AuthService,
           ScreenService,

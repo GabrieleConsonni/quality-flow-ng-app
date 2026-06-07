@@ -55,12 +55,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "apps/quality-flow-ng-app/src/favicon.ico",
-              "apps/quality-flow-ng-app/src/assets",
-              {
-                "glob": "**/*",
-                "input": "node_modules/@akeron-ng/tiara-ng/src/styles",
-                "output": "assets/tiara-ng/styles"
-              }
+              "apps/quality-flow-ng-app/src/assets"
             ],
             "styles": [],
             "scripts": [],
@@ -93,11 +88,6 @@
                 "apps/quality-flow-ng-app/src/assets",
                 {
                   "glob": "**/*",
-                  "input": "node_modules/@akeron-ng/tiara-ng/src/styles",
-                  "output": "assets/tiara-ng/styles"
-                },
-                {
-                  "glob": "**/*",
                   "input": "apps/quality-flow-ng-app/src/assets/alkyra",
                   "output": "assets"
                 }
@@ -110,11 +100,6 @@
               "assets": [
                 "apps/quality-flow-ng-app/src/favicon.ico",
                 "apps/quality-flow-ng-app/src/assets",
-                {
-                  "glob": "**/*",
-                  "input": "node_modules/@akeron-ng/tiara-ng/src/styles",
-                  "output": "assets/tiara-ng/styles"
-                },
                 {
                   "glob": "**/*",
                   "input": "apps/quality-flow-ng-app/src/assets/vulki",
@@ -137,11 +122,6 @@
                 "apps/quality-flow-ng-app/src/assets",
                 {
                   "glob": "**/*",
-                  "input": "node_modules/@akeron-ng/tiara-ng/src/styles",
-                  "output": "assets/tiara-ng/styles"
-                },
-                {
-                  "glob": "**/*",
                   "input": "apps/quality-flow-ng-app/src/assets/vulki",
                   "output": "assets"
                 }
@@ -154,11 +134,6 @@
               "assets": [
                 "apps/quality-flow-ng-app/src/favicon.ico",
                 "apps/quality-flow-ng-app/src/assets",
-                {
-                  "glob": "**/*",
-                  "input": "node_modules/@akeron-ng/tiara-ng/src/styles",
-                  "output": "assets/tiara-ng/styles"
-                },
                 {
                   "glob": "**/*",
                   "input": "apps/quality-flow-ng-app/src/assets/vulki",
