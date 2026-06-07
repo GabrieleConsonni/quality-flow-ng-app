@@ -23,7 +23,7 @@ The UI is organized around the **Test Suites** domain and the supporting configu
 
 - **Angular 20** (standalone components, signals) in an Nx-style `apps/` workspace
 - **pnpm** package manager
-- **[Tiara design system](https://www.npmjs.com/org/akeron-ng)** (`@akeron-ng/tiara-ng`, `tiara-ng-suite`) + **DevExtreme** for data-heavy UI
+- **Tiara design system** (`@akeron-ng/tiara-ng`, `tiara-ng-suite`) + **DevExtreme** for data-heavy UI
 - **NgRx Signals** for state, **RxJS** for async flows
 - **Monaco editor** + **jsondiffpatch** for JSON editing and diffing
 - **OIDC** auth via `angular-oauth2-oidc` (bypassed in the `mock-auth` profile for local dev)
@@ -92,14 +92,7 @@ apps/quality-flow-ng-app/      Angular application
 e2e/                           Playwright config and specs
 docker/                        Dockerfile / nginx for the containerized FE
 biome.jsonc                    Biome lint/format config
-update-license.js              injects the DevExtreme license at build time
 ```
-
-## DevExtreme license
-
-The DevExtreme license key is **not** committed. It is injected at build time via
-`update-license.js` (`pnpm run update-devxtreme-license`) and the generated
-`license-devextreme.ts` is git-ignored.
 
 ## Related repositories
 

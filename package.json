@@ -18,7 +18,6 @@
     "watch": "ng build quality-flow-ng-app --watch --configuration development",
     "watch:mock-auth": "ng build quality-flow-ng-app --watch --configuration=mock-auth",
     "test": "ng test quality-flow-ng-app --watch=false",
-    "update-devxtreme-license": "node update-license.js",
     "e2e:install": "playwright install --with-deps chromium",
     "e2e:run": "playwright test -c e2e/playwright.config.ts",
     "e2e:report": "playwright show-report"

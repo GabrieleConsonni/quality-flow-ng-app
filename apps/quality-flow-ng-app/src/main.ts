@@ -12,16 +12,12 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateLoader } from '@ngx-translate/core';
 import { OAuthService, provideOAuthClient } from 'angular-oauth2-oidc';
-import config from 'devextreme/core/config';
 import themes from 'devextreme/ui/themes';
 import { from, Observable, of } from 'rxjs';
 
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
 import { environment } from './environments/environment';
-import { DEVEXTREME_LICENCE } from './license-devextreme';
-
-config({ licenseKey: DEVEXTREME_LICENCE });
 
 themes.initialized(() => {
   fetch('./assets/i18n/en.json')

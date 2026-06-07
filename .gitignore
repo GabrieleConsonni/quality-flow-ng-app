@@ -45,9 +45,6 @@ test-results/
 e2e/auth/storageState.json
 e2e/.env
 
-# DevExtreme license (do not commit license keys)
-**/license-devextreme.ts
-
 # Miscellaneous
 .sass-cache/
 /connect.lock
